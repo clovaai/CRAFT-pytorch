@@ -49,6 +49,10 @@ The result image and socre maps will be saved to `./result` by default.
 * `--show_time`: show processing time
 * `--test_folder`: folder path to input images
 
+## Links
+- WebDemo : https://demo.ocr.clova.ai/
+- Repo of recognition : https://github.com/clovaai/deep-text-recognition-benchmark
+
 ## Citation
 ```
 @article{baek2019character,
