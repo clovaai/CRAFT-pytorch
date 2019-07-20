@@ -50,6 +50,7 @@ parser.add_argument('--link_threshold', default=0.4, type=float, help='link conf
 parser.add_argument('--cuda', default=True, type=str2bool, help='Use cuda to train model')
 parser.add_argument('--canvas_size', default=1280, type=int, help='image size for inference')
 parser.add_argument('--mag_ratio', default=1.5, type=float, help='image magnification ratio')
+parser.add_argument('--poly', default=False, action='store_true', help='enable polygon type')
 parser.add_argument('--show_time', default=False, action='store_true', help='show processing time')
 parser.add_argument('--test_folder', default='/data/', type=str, help='folder path to input images')
 
@@ -63,7 +64,7 @@ result_folder = './result/'
 if not os.path.isdir(result_folder):
     os.mkdir(result_folder)
 
-def test_net(net, image, text_threshold, link_threshold, low_text, cuda):
+def test_net(net, image, text_threshold, link_threshold, low_text, cuda, poly):
     t0 = time.time()
 
     # resize
@@ -88,8 +89,13 @@ def test_net(net, image, text_threshold, link_threshold, low_text, cuda):
     t1 = time.time()
 
     # Post-processing
-    boxes = craft_utils.getDetBoxes(score_text, score_link, text_threshold, link_threshold, low_text)
+    boxes, polys = craft_utils.getDetBoxes(score_text, score_link, text_threshold, link_threshold, low_text, poly)
+
+    # coordinate adjustment
     boxes = craft_utils.adjustResultCoordinates(boxes, ratio_w, ratio_h)
+    polys = craft_utils.adjustResultCoordinates(polys, ratio_w, ratio_h)
+    for k in range(len(polys)):
+        if polys[k] is None: polys[k] = boxes[k]
 
     t1 = time.time() - t1
 
@@ -100,7 +106,7 @@ def test_net(net, image, text_threshold, link_threshold, low_text, cuda):
 
     if args.show_time : print("\ninfer/postproc time : {:.3f}/{:.3f}".format(t0, t1))
 
-    return boxes, ret_score_text
+    return boxes, polys, ret_score_text
 
 
 
@@ -128,13 +134,13 @@ if __name__ == '__main__':
         print("Test image {:d}/{:d}: {:s}".format(k+1, len(image_list), image_path), end='\r')
         image = imgproc.loadImage(image_path)
 
-        bboxes, score_text = test_net(net, image, args.text_threshold, args.link_threshold, args.low_text, args.cuda)
+        bboxes, polys, score_text = test_net(net, image, args.text_threshold, args.link_threshold, args.low_text, args.cuda, args.poly)
 
         # save score text
         filename, file_ext = os.path.splitext(os.path.basename(image_path))
         mask_file = result_folder + "/res_" + filename + '_mask.jpg'
         cv2.imwrite(mask_file, score_text)
 
-        file_utils.saveResult(image_path, image[:,:,::-1], bboxes, dirname=result_folder)
+        file_utils.saveResult(image_path, image[:,:,::-1], polys, dirname=result_folder)
 
     print("elapsed time : {}s".format(time.time() - t))
