@@ -46,6 +46,7 @@ The result image and socre maps will be saved to `./result` by default.
 * `--link_threshold`: link confidence threshold
 * `--canvas_size`: max image size for inference
 * `--mag_ratio`: image magnification ratio
+* `--poly`: enable polygon type result
 * `--show_time`: show processing time
 * `--test_folder`: folder path to input images
 
