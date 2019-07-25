@@ -44,6 +44,7 @@ The result image and socre maps will be saved to `./result` by default.
 * `--text_threshold`: text confidence threshold
 * `--low_text`: text low-bound score
 * `--link_threshold`: link confidence threshold
+* `--cuda`: Use cuda to train model
 * `--canvas_size`: max image size for inference
 * `--mag_ratio`: image magnification ratio
 * `--poly`: enable polygon type result
