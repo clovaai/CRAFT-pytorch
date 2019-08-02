@@ -28,7 +28,8 @@ pip install -r requirements.txt
 ```
 
 ### Training
-We are currently in the process of cleaning training code for disclosure.
+The code for training is not included in this repository, and we cannot release the full training code for IP reason.
+
 
 ### Test instruction using pretrained model
 - Download [Trained Model on IC13,IC17](https://drive.google.com/open?id=1Jk4eGD7crsqCCg9C9VjCLkMN3ze8kutZ)
@@ -56,10 +57,11 @@ The result image and socre maps will be saved to `./result` by default.
 
 ## Citation
 ```
-@article{baek2019character,
+@inproceedings{baek2019character,
   title={Character Region Awareness for Text Detection},
   author={Baek, Youngmin and Lee, Bado and Han, Dongyoon and Yun, Sangdoo and Lee, Hwalsuk},
-  journal={arXiv preprint arXiv:1904.01941},
+  booktitle={Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition},
+  pages={9365--9374},
   year={2019}
 }
 ```
