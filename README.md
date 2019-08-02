@@ -14,6 +14,7 @@ PyTorch implementation for CRAFT text detector that effectively detect text area
 
 ## Updates
 **13 Jun, 2019**: Initial update
+**20 Jul, 2019**: Added post-processing for polygon result
 
 
 ## Getting started
