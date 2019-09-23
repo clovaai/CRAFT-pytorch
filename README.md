@@ -52,20 +52,8 @@ The result image and socre maps will be saved to `./result` by default.
 * `--show_time`: show processing time
 * `--test_folder`: folder path to input images
 
-## Links
-- WebDemo : https://demo.ocr.clova.ai/
-- Repo of recognition : https://github.com/clovaai/deep-text-recognition-benchmark
 
-## Citation
-```
-@inproceedings{baek2019character,
-  title={Character Region Awareness for Text Detection},
-  author={Baek, Youngmin and Lee, Bado and Han, Dongyoon and Yun, Sangdoo and Lee, Hwalsuk},
-  booktitle={Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition},
-  pages={9365--9374},
-  year={2019}
-}
-```
+
 ### Export to onnx
 Navigate to 
 
@@ -85,7 +73,26 @@ save the file and run
 ```
 python3 onxx.py
 ```
+Exported onnx graph can be downloaded from here:
 
+https://drive.google.com/file/d/1QeB9cKMYd-OtswbT0xHXJSb6UBRKNdqK/view?usp=sharing
+
+
+## Links
+- WebDemo : https://demo.ocr.clova.ai/
+- Repo of recognition : https://github.com/clovaai/deep-text-recognition-benchmark
+
+
+## Citation
+```
+@inproceedings{baek2019character,
+  title={Character Region Awareness for Text Detection},
+  author={Baek, Youngmin and Lee, Bado and Han, Dongyoon and Yun, Sangdoo and Lee, Hwalsuk},
+  booktitle={Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition},
+  pages={9365--9374},
+  year={2019}
+}
+```
 
 ## License
 ```
