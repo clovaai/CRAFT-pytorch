@@ -66,6 +66,26 @@ The result image and socre maps will be saved to `./result` by default.
   year={2019}
 }
 ```
+### Export to onnx
+Navigate to 
+
+```
+pytorch/torch/onnx/symbolic_opset9.py 
+```
+
+and right below where upsample_nearest* are defined add:
+
+```
+upsample_bilinear1d = _interpolate('upsample_bilinear1d', 3, "linear")
+upsample_bilinear2d = _interpolate('upsample_bilinear2d', 4, "linear")
+upsample_bilinear3d = _interpolate('upsample_bilinear3d', 5, "linear")
+```
+save the file and run 
+
+```
+python3 onxx.py
+```
+
 
 ## License
 ```
