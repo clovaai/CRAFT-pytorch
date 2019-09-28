@@ -90,7 +90,7 @@ def getPoly_core(boxes, labels, mapper, linkmap):
     for k, box in enumerate(boxes):
         # size filter for small instance
         w, h = int(np.linalg.norm(box[0] - box[1]) + 1), int(np.linalg.norm(box[1] - box[2]) + 1)
-        if w < 30 or h < 30:
+        if w < 10 or h < 10:
             polys.append(None); continue
 
         # warp image
