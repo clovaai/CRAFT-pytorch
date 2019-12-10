@@ -107,6 +107,14 @@ def getPoly_core(boxes, labels, mapper, linkmap):
         word_label[word_label != cur_label] = 0
         word_label[word_label > 0] = 1
 
+        flag = False
+        if h > w:
+            a = w
+            w = h
+            h = a
+            word_label = word_label.transpose()
+            flag = True
+
         """ Polygon generation """
         # find top/bottom contours
         cp = []
@@ -210,14 +218,19 @@ def getPoly_core(boxes, labels, mapper, linkmap):
 
         # make final polygon
         poly = []
-        poly.append(warpCoord(Minv, (spp[0], spp[1])))
+        ix = 0
+        iy = 1
+        if flag:              
+            ix = 1
+            iy = 0
+        poly.append(warpCoord(Minv, (spp[ix], spp[iy])))
         for p in new_pp:
-            poly.append(warpCoord(Minv, (p[0], p[1])))
-        poly.append(warpCoord(Minv, (epp[0], epp[1])))
-        poly.append(warpCoord(Minv, (epp[2], epp[3])))
+            poly.append(warpCoord(Minv, (p[ix], p[iy])))
+        poly.append(warpCoord(Minv, (epp[ix], epp[iy])))
+        poly.append(warpCoord(Minv, (epp[ix + 2], epp[iy + 2])))
         for p in reversed(new_pp):
-            poly.append(warpCoord(Minv, (p[2], p[3])))
-        poly.append(warpCoord(Minv, (spp[2], spp[3])))
+            poly.append(warpCoord(Minv, (p[ix + 2], p[iy + 2])))
+        poly.append(warpCoord(Minv, (spp[ix + 2], spp[iy + 2])))
 
         # add to final result
         polys.append(np.array(poly))
