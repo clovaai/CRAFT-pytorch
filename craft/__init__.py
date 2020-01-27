@@ -19,6 +19,7 @@ def detect_text(img, text_threshold=0.7, link_threshold=0.4, low_text=0.4):
 
 
 def show_bounding_boxes(img, bboxes):
+    img = np.array(img)
     for i, box in enumerate(bboxes):
         poly = np.array(box).astype(np.int32).reshape((-1))
 
