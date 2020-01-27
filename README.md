@@ -2,8 +2,10 @@
 Official Pytorch implementation of CRAFT text detector | [Paper](https://arxiv.org/abs/1904.01941) | [Pretrained Model](https://drive.google.com/open?id=1Jk4eGD7crsqCCg9C9VjCLkMN3ze8kutZ) | [Supplementary](https://youtu.be/HI8MzpY8KMI)
 
 **[Youngmin Baek](mailto:youngmin.baek@navercorp.com), Bado Lee, Dongyoon Han, Sangdoo Yun, Hwalsuk Lee.**
- 
+
 Clova AI Research, NAVER Corp.
+
+**Packaged by [Ashish Jha](mailto:arj7192@gmail.com)**
 
 ### Sample Results
 
@@ -16,15 +18,39 @@ PyTorch implementation for CRAFT text detector that effectively detect text area
 **13 Jun, 2019**: Initial update
 **20 Jul, 2019**: Added post-processing for polygon result
 **28 Sep, 2019**: Added the trained model on IC15 and the link refiner
+**25 Jan, 2020**: Put it together as a PyPI package
 
 
 ## Getting started
-### Install dependencies
+
+### Use it straight from PyPI
+#### Installation
+```
+pip install craft-text-detection
+```
+#### Usage
+```
+import craft
+import cv2
+img = cv2.imread('/path/to/image/file')
+
+# run the detector
+bboxes, polys, heatmap = craft.detect_text(img)
+
+# view the image with bounding boxes
+img_boxed = craft.show_bounding_boxes(img, bboxes)
+cv2.imshow('fig', img_boxed)
+
+# view detection heatmap
+cv2.imshow('fig', heatmap)
+```
+
+### Use from source - install dependencies
 #### Requirements
 - PyTorch>=0.4.1
 - torchvision>=0.2.1
 - opencv-python>=3.4.2
-- check requiremtns.txt
+- check requiremetns.txt
 ```
 pip install -r requirements.txt
 ```
@@ -33,34 +59,13 @@ pip install -r requirements.txt
 The code for training is not included in this repository, and we cannot release the full training code for IP reason.
 
 
-### Test instruction using pretrained model
-- Download the trained models
- 
- *Model name* | *Used datasets* | *Languages* | *Purpose* | *Model Link* |
- | :--- | :--- | :--- | :--- | :--- |
-General | SynthText, IC13, IC17 | Eng + MLT | For general purpose | [Click](https://drive.google.com/open?id=1Jk4eGD7crsqCCg9C9VjCLkMN3ze8kutZ)
-IC15 | SynthText, IC15 | Eng | For IC15 only | [Click](https://drive.google.com/open?id=1i2R7UIUqmkUtF0jv_3MXTqmQ_9wuAnLf)
-LinkRefiner | CTW1500 | - | Used with the General Model | [Click](https://drive.google.com/open?id=1XSaFwBkOaFOdtk4Ane3DFyJGPRw6v5bO)
-
-* Run with pretrained model
-``` (with python 3.7)
-python test.py --trained_model=[weightfile] --test_folder=[folder path to test images]
-```
-
-The result image and socre maps will be saved to `./result` by default.
-
-### Arguments
-* `--trained_model`: pretrained model
+### Arguments for detect_text
 * `--text_threshold`: text confidence threshold
 * `--low_text`: text low-bound score
 * `--link_threshold`: link confidence threshold
-* `--cuda`: use cuda for inference (default:True)
 * `--canvas_size`: max image size for inference
 * `--mag_ratio`: image magnification ratio
-* `--poly`: enable polygon type result
-* `--show_time`: show processing time
-* `--test_folder`: folder path to input images
-* `--refine`: use link refiner for sentense-level dataset
+* `--refine`: use link refiner for sentence-level dataset
 * `--refiner_model`: pretrained refiner model
 
 

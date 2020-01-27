@@ -8,7 +8,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from basenet.vgg16_bn import vgg16_bn, init_weights
+from craft_detector.basenet.vgg16_bn import vgg16_bn, init_weights
+
 
 class double_conv(nn.Module):
     def __init__(self, in_ch, mid_ch, out_ch):
