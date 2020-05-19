@@ -7,13 +7,13 @@ verify_ssl = true
 pipenv-setup = "*"
 
 [packages]
-torch = "==0.4.1"
-torchvision = "==0.2.1"
-opencv-python = "==3.4.2.17"
-scikit-image = "==0.14.2"
-scipy = "==1.1.0"
-requests = "==2.22.0"
-Pillow = "==6.2.0"
+torch = "~=1.5"
+torchvision = "~=0.6"
+opencv-python = "~=4.2"
+scikit-image = "~=0.17"
+scipy = "~=1.4"
+requests = "~=2.23"
+Pillow = "~=7.1"
 
 [requires]
 python_version = "3.6"
