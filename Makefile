@@ -24,7 +24,7 @@ clean-h2o-craft: ## Cleans h2o-craft module
 	rm -rf build dist h2o_craft.egg-info
 
 .PHONY: docker-build-in-docker
-docker-build-in-docker: ## builds specified make_target in docker container
+docker-build-in-docker: ## pass 'make_target=target' argument to make 'target' in docker container
 	@echo "----- Building specified make target in docker container -----"
 	docker build \
 		-t h2oai/h2oocr-build:0.1.0 \
