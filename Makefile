@@ -21,10 +21,7 @@ build-h2o-craft: ## Builds h2o-craft module
 .PHONY: clean-h2o-craft
 clean-h2o-craft: ## Cleans h2o-craft module
 	@echo "----- Cleaning h2o-craft module -----"
-	rm -rf build dist
-	# find h2oocr-python-packages/h2oocr-base -name '*.so' -exec rm -rf {} \;
-	# find h2oocr-python-packages/h2oocr-base -type d -name '__pycache__' -prune -exec rm -rf {} \;
-
+	rm -rf build dist h2o_craft.egg-info
 
 .PHONY: docker-build-in-docker
 docker-build-in-docker: ## builds specified make_target in docker container
