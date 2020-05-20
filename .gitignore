@@ -5,3 +5,6 @@
 *.pth
 result*
 weights*
+build
+dist
+h2o_craft.egg-info
