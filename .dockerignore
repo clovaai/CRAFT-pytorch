@@ -1,0 +1,15 @@
+.cache
+.dockerignore
+.git
+.gitignore
+.idea
+.local
+Dockerfile-build
+LICENSE
+Makefile
+Pipfile
+Pipfile.lock
+README.md
+craft_detector
+setup.py
+version.txt
