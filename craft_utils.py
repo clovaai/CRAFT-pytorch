@@ -25,10 +25,15 @@ def getDetBoxes_core(textmap, linkmap, text_threshold, link_threshold, low_text)
     """ labeling method """
     ret, text_score = cv2.threshold(textmap, low_text, 1, 0)
     ret, link_score = cv2.threshold(linkmap, link_threshold, 1, 0)
-
+    
     text_score_comb = np.clip(text_score + link_score, 0, 1)
     nLabels, labels, stats, centroids = cv2.connectedComponentsWithStats(text_score_comb.astype(np.uint8), connectivity=4)
-
+    
+    ### if link_threshold too high do not need remove link area
+    boxtype = 0 #detect text block
+    if np.count_nonzero(link_score) == 0:
+        boxtype = 1 #detect char only
+    
     det = []
     mapper = []
     for k in range(1,nLabels):
@@ -42,7 +47,16 @@ def getDetBoxes_core(textmap, linkmap, text_threshold, link_threshold, low_text)
         # make segmentation map
         segmap = np.zeros(textmap.shape, dtype=np.uint8)
         segmap[labels==k] = 255
-        segmap[np.logical_and(link_score==1, text_score==0)] = 0   # remove link area
+        
+        # detect char only do not need remove link area, detect text block do remove link area by new way to reduce time cost
+        if boxtype == 0:
+            #segmap[np.logical_and(link_score==1, text_score==0)] = 0   # remove link area
+            segmap_sub = segmap[stats[k][1]:stats[k][1]+stats[k][3],stats[k][0]:stats[k][0]+stats[k][2]]
+            link_score_sub = link_score[stats[k][1]:stats[k][1]+stats[k][3],stats[k][0]:stats[k][0]+stats[k][2]]
+            text_score_sub = text_score[stats[k][1]:stats[k][1]+stats[k][3],stats[k][0]:stats[k][0]+stats[k][2]]
+            segmap_sub[np.logical_and(link_score_sub==1, text_score_sub==0)] = 0
+            segmap[stats[k][1]:stats[k][1]+stats[k][3],stats[k][0]:stats[k][0]+stats[k][2]] = segmap_sub
+        
         x, y = stats[k, cv2.CC_STAT_LEFT], stats[k, cv2.CC_STAT_TOP]
         w, h = stats[k, cv2.CC_STAT_WIDTH], stats[k, cv2.CC_STAT_HEIGHT]
         niter = int(math.sqrt(size * min(w, h) / (w * h)) * 2)
