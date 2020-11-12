@@ -81,7 +81,8 @@ save the file and run
 ```
 python3 onxx.py
 ```
-Exported onnx graph can be downloaded from here:
+Exported onnx graph can be downloaded from here, it is a paid file(please contact on: ajinkyabobade93@gmail.com for access):
+
 
 https://drive.google.com/file/d/1QeB9cKMYd-OtswbT0xHXJSb6UBRKNdqK/view?usp=sharing
 
