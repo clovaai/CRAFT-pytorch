@@ -4,3 +4,5 @@
 *.pth
 result*
 weights*
+
+cpp_bindings/build/**
