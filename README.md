@@ -60,7 +60,7 @@ The result image and socre maps will be saved to `./result` by default.
 * `--poly`: enable polygon type result
 * `--show_time`: show processing time
 * `--test_folder`: folder path to input images
-* `--refine`: use link refiner for sentense-level dataset
+* `--refine`: use link refiner for sentence-level dataset
 * `--refiner_model`: pretrained refiner model
 
 
