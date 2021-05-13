@@ -1,5 +1,5 @@
-torch==0.4.1.post2
-torchvision==0.2.1
-opencv-python==3.4.2.17
+torch==1.7.0
+torchvision==0.8.1
+opencv-python==4.5.1.48
 scikit-image==0.14.2
 scipy==1.1.0
