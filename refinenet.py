@@ -6,8 +6,6 @@ MIT License
 # -*- coding: utf-8 -*-
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
-from torch.autograd import Variable
 from basenet.vgg16_bn import init_weights
 
 
@@ -16,32 +14,43 @@ class RefineNet(nn.Module):
         super(RefineNet, self).__init__()
 
         self.last_conv = nn.Sequential(
-            nn.Conv2d(34, 64, kernel_size=3, padding=1), nn.BatchNorm2d(64), nn.ReLU(inplace=True),
-            nn.Conv2d(64, 64, kernel_size=3, padding=1), nn.BatchNorm2d(64), nn.ReLU(inplace=True),
-            nn.Conv2d(64, 64, kernel_size=3, padding=1), nn.BatchNorm2d(64), nn.ReLU(inplace=True)
+            nn.Conv2d(34, 64, kernel_size=3, padding=1), nn.BatchNorm2d(
+                64), nn.ReLU(inplace=True),
+            nn.Conv2d(64, 64, kernel_size=3, padding=1), nn.BatchNorm2d(
+                64), nn.ReLU(inplace=True),
+            nn.Conv2d(64, 64, kernel_size=3, padding=1), nn.BatchNorm2d(
+                64), nn.ReLU(inplace=True)
         )
 
         self.aspp1 = nn.Sequential(
-            nn.Conv2d(64, 128, kernel_size=3, dilation=6, padding=6), nn.BatchNorm2d(128), nn.ReLU(inplace=True),
-            nn.Conv2d(128, 128, kernel_size=1), nn.BatchNorm2d(128), nn.ReLU(inplace=True),
+            nn.Conv2d(64, 128, kernel_size=3, dilation=6,
+                      padding=6), nn.BatchNorm2d(128), nn.ReLU(inplace=True),
+            nn.Conv2d(128, 128, kernel_size=1), nn.BatchNorm2d(
+                128), nn.ReLU(inplace=True),
             nn.Conv2d(128, 1, kernel_size=1)
         )
 
         self.aspp2 = nn.Sequential(
-            nn.Conv2d(64, 128, kernel_size=3, dilation=12, padding=12), nn.BatchNorm2d(128), nn.ReLU(inplace=True),
-            nn.Conv2d(128, 128, kernel_size=1), nn.BatchNorm2d(128), nn.ReLU(inplace=True),
+            nn.Conv2d(64, 128, kernel_size=3, dilation=12,
+                      padding=12), nn.BatchNorm2d(128), nn.ReLU(inplace=True),
+            nn.Conv2d(128, 128, kernel_size=1), nn.BatchNorm2d(
+                128), nn.ReLU(inplace=True),
             nn.Conv2d(128, 1, kernel_size=1)
         )
 
         self.aspp3 = nn.Sequential(
-            nn.Conv2d(64, 128, kernel_size=3, dilation=18, padding=18), nn.BatchNorm2d(128), nn.ReLU(inplace=True),
-            nn.Conv2d(128, 128, kernel_size=1), nn.BatchNorm2d(128), nn.ReLU(inplace=True),
+            nn.Conv2d(64, 128, kernel_size=3, dilation=18,
+                      padding=18), nn.BatchNorm2d(128), nn.ReLU(inplace=True),
+            nn.Conv2d(128, 128, kernel_size=1), nn.BatchNorm2d(
+                128), nn.ReLU(inplace=True),
             nn.Conv2d(128, 1, kernel_size=1)
         )
 
         self.aspp4 = nn.Sequential(
-            nn.Conv2d(64, 128, kernel_size=3, dilation=24, padding=24), nn.BatchNorm2d(128), nn.ReLU(inplace=True),
-            nn.Conv2d(128, 128, kernel_size=1), nn.BatchNorm2d(128), nn.ReLU(inplace=True),
+            nn.Conv2d(64, 128, kernel_size=3, dilation=24,
+                      padding=24), nn.BatchNorm2d(128), nn.ReLU(inplace=True),
+            nn.Conv2d(128, 128, kernel_size=1), nn.BatchNorm2d(
+                128), nn.ReLU(inplace=True),
             nn.Conv2d(128, 1, kernel_size=1)
         )
 
@@ -52,7 +61,7 @@ class RefineNet(nn.Module):
         init_weights(self.aspp4.modules())
 
     def forward(self, y, upconv4):
-        refine = torch.cat([y.permute(0,3,1,2), upconv4], dim=1)
+        refine = torch.cat([y.permute(0, 3, 1, 2), upconv4], dim=1)
         refine = self.last_conv(refine)
 
         aspp1 = self.aspp1(refine)
