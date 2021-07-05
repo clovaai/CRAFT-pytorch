@@ -21,6 +21,9 @@ class TextDetection:
         self, image, text_thresh=0.7, link_thresh=0.2,
         low_text=0.4, mag_ratio=1.5, canvas_size=1280
     ):
+        if image is None:
+            return []
+
         # resize
         img_resized, target_ratio, _ = resize_aspect_ratio(
             image, canvas_size, interpolation=cv2.INTER_LINEAR,
@@ -65,6 +68,6 @@ if __name__ == "__main__":
         '/home/guilherme/Documents/Code/Nuveo/npa/npa/models/obj_craft/craft_mlt_25k.pth')
 
     img = cv2.imread(
-        '/home/guilherme/Documents/Code/Nuveo/CRAFT-pytorch/craft/images/orv-photo-RG_5605234.JPG')
+        '/home/guilherme/Documents/Code/Nuveo/CRAFT-pytorch/craft/images/test.png')
     anns = model.get(img)
     print(anns)
