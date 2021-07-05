@@ -14,25 +14,10 @@ from torch.autograd import Variable
 
 import cv2
 import numpy as np
-import craft_utils
 import imgproc
-import file_utils
 
-from craft import CRAFT
-
-from collections import OrderedDict
-
-
-def copy_state_dict(state_dict):
-    if list(state_dict.keys())[0].startswith("module"):
-        start_idx = 1
-    else:
-        start_idx = 0
-    new_state_dict = OrderedDict()
-    for k, v in state_dict.items():
-        name = ".".join(k.split(".")[start_idx:])
-        new_state_dict[name] = v
-    return new_state_dict
+from craft import utils
+from craft.model import CRAFT
 
 
 def str2bool(v):
@@ -54,11 +39,9 @@ parser.add_argument('--canvas_size', default=1280,
                     type=int, help='image size for inference')
 parser.add_argument('--mag_ratio', default=1.5, type=float,
                     help='image magnification ratio')
-parser.add_argument('--poly', default=False,
-                    action='store_true', help='enable polygon type')
 parser.add_argument('--show_time', default=False,
                     action='store_true', help='show processing time')
-parser.add_argument('--test_folder', default='/data/',
+parser.add_argument('--test_folder', default='./images/',
                     type=str, help='folder path to input images')
 parser.add_argument('--refine', default=False,
                     action='store_true', help='enable link refiner')
@@ -69,14 +52,14 @@ args = parser.parse_args()
 
 
 """ For test images in a folder """
-image_list, _, _ = file_utils.get_files(args.test_folder)
+image_list, _, _ = utils.file.get_files(args.test_folder)
 
 result_folder = './result/'
 if not os.path.isdir(result_folder):
     os.mkdir(result_folder)
 
 
-def test_net(net, image, text_threshold, link_threshold, low_text, cuda, poly, refine_net=None):
+def test_net(net, image, text_threshold, link_threshold, low_text, cuda, refine_net=None):
     t0 = time.time()
 
     # resize
@@ -109,15 +92,11 @@ def test_net(net, image, text_threshold, link_threshold, low_text, cuda, poly, r
     t1 = time.time()
 
     # Post-processing
-    boxes, polys = craft_utils.get_det_boxes(
-        score_text, score_link, text_threshold, link_threshold, low_text, poly)
+    boxes = utils.detections.get_det_boxes(
+        score_text, score_link, text_threshold, link_threshold, low_text)
 
     # coordinate adjustment
-    boxes = craft_utils.adjust_result_coordinates(boxes, ratio_w, ratio_h)
-    polys = craft_utils.adjust_result_coordinates(polys, ratio_w, ratio_h)
-    for k in range(len(polys)):
-        if polys[k] is None:
-            polys[k] = boxes[k]
+    boxes = utils.detections.adjust_result_coordinates(boxes, ratio_w, ratio_h)
 
     t1 = time.time() - t1
 
@@ -129,7 +108,7 @@ def test_net(net, image, text_threshold, link_threshold, low_text, cuda, poly, r
     if args.show_time:
         print("\ninfer/postproc time : {:.3f}/{:.3f}".format(t0, t1))
 
-    return boxes, polys, ret_score_text
+    return boxes, ret_score_text
 
 
 if __name__ == '__main__':
@@ -166,7 +145,6 @@ if __name__ == '__main__':
                 torch.load(args.refiner_model, map_location='cpu')))
 
         refine_net.eval()
-        args.poly = True
 
     t = time.time()
 
@@ -176,15 +154,15 @@ if __name__ == '__main__':
               len(image_list), image_path), end='\r')
         image = imgproc.loadImage(image_path)
 
-        bboxes, polys, score_text = test_net(
-            net, image, args.text_threshold, args.link_threshold, args.low_text, args.cuda, args.poly, refine_net)
+        bboxes, score_text = test_net(
+            net, image, args.text_threshold, args.link_threshold, args.low_text, args.cuda, refine_net)
 
         # save score text
         filename, file_ext = os.path.splitext(os.path.basename(image_path))
         mask_file = result_folder + "/res_" + filename + '_mask.jpg'
         cv2.imwrite(mask_file, score_text)
 
-        file_utils.save_result(
-            image_path, image[:, :, ::-1], polys, dirname=result_folder)
+        utils.file.save_result(
+            image_path, image[:, :, ::-1], bboxes, dirname=result_folder)
 
     print("elapsed time : {}s".format(time.time() - t))
