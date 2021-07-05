@@ -14,9 +14,10 @@ from torch.autograd import Variable
 
 import cv2
 import numpy as np
-import imgproc
 
 from craft import utils
+from craft.utils import imgproc
+from craft.utils.data import copy_state_dict
 from craft.model import CRAFT
 
 
@@ -33,7 +34,7 @@ parser.add_argument('--low_text', default=0.4, type=float,
                     help='text low-bound score')
 parser.add_argument('--link_threshold', default=0.4,
                     type=float, help='link confidence threshold')
-parser.add_argument('--cuda', default=True, type=str2bool,
+parser.add_argument('--cuda', default=False, type=str2bool,
                     help='Use cuda for inference')
 parser.add_argument('--canvas_size', default=1280,
                     type=int, help='image size for inference')
@@ -92,7 +93,7 @@ def test_net(net, image, text_threshold, link_threshold, low_text, cuda, refine_
     t1 = time.time()
 
     # Post-processing
-    boxes = utils.detections.get_det_boxes(
+    boxes = utils.detections.get_detections(
         score_text, score_link, text_threshold, link_threshold, low_text)
 
     # coordinate adjustment
