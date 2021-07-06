@@ -5,11 +5,8 @@ from craft import __version__
 long_description = open('README.md').read()
 
 requirements = [
-    'torch==1.9.0',
-    'torchvision==0.10.0',
     'opencv-python==3.4.2.17',
-    'scikit-image==0.14.2',
-    'scipy==1.1.0'
+    'scikit-image==0.14.2'
 ]
 
 setup(
