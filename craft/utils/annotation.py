@@ -14,10 +14,10 @@ def convert_detection_to_annotation(detections):
         }
         for (x, y) in det:
             ann["vertices"].append({"x": int(x), "y": int(y)})
-            ann["rect"][0] = np.min((y, ann["rect"][0])).astype(int)
-            ann["rect"][1] = np.max((y, ann["rect"][1])).astype(int)
-            ann["rect"][2] = np.min((x, ann["rect"][2])).astype(int)
-            ann["rect"][3] = np.max((x, ann["rect"][3])).astype(int)
+            ann["rect"][0] = int(np.min((y, ann["rect"][0])))
+            ann["rect"][1] = int(np.max((y, ann["rect"][1])))
+            ann["rect"][2] = int(np.min((x, ann["rect"][2])))
+            ann["rect"][3] = int(np.max((x, ann["rect"][3])))
         anns.append(ann)
 
     return anns

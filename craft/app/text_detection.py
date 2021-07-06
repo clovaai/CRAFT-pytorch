@@ -17,7 +17,7 @@ class TextDetection:
             torch.load(model_path, map_location='cpu')))
         self.model.eval()
 
-    def get(
+    def predict(
         self, image, text_thresh=0.7, link_thresh=0.2,
         low_text=0.4, mag_ratio=1.5, canvas_size=1280
     ):
@@ -65,7 +65,7 @@ class TextDetection:
 
 if __name__ == "__main__":
     model = TextDetection(
-        '/home/guilherme/Documents/Code/Nuveo/npa/npa/models/obj_craft/craft_mlt_25k.pth')
+        '/home/guilherme/Documents/Code/Nuveo/npa/npa/models/text_detection_craft/craft_mlt_25k.pth')
 
     img = cv2.imread(
         '/home/guilherme/Documents/Code/Nuveo/CRAFT-pytorch/craft/images/test.png')
