@@ -122,12 +122,12 @@ def sort_detections(polys):
     Sort detections left-right and top-down.
     """
     polys = copy.deepcopy(polys)
-    polys_lines = []
+    lines_of_polys = []
     while len(polys):
         y_arr = []
         ref_box = None
         remove_indices = []
-        polys_lines.append([])
+        lines_of_polys.append([])
         for i, poly in enumerate(polys):
             poly = np.array(poly)
             box = poly_to_box(poly)
@@ -137,16 +137,17 @@ def sort_detections(polys):
                 x, y = np.mean(poly[:, 0]), np.mean(poly[:, 1])
                 y_arr.append(y)
                 remove_indices.append(i)
-                polys_lines[-1].append((x, poly))
+                lines_of_polys[-1].append((x, poly))
 
         polys = [p for j, p in enumerate(polys) if j not in remove_indices]
         # sort left-right
-        polys_lines[-1] = (np.mean(y_arr), [p[1]
-                           for p in sorted(polys_lines[-1])])
+        lines_of_polys[-1] = (np.mean(y_arr), [p[1]
+                                               for p in sorted(lines_of_polys[-1])])
     # sort top-down
-    polys_lines = [p[1] for p in sorted(polys_lines)]
+    lines_of_polys = [p[1] for p in sorted(lines_of_polys)]
 
-    return polys_lines
+    polys = sum(lines_of_polys, [])
+    return polys
 
 
 def get_detections(textmap, linkmap, text_threshold, link_threshold, low_text):
