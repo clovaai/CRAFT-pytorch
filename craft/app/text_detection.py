@@ -1,6 +1,5 @@
 import cv2
 import torch
-from torch.autograd import Variable
 
 # local import
 from craft.model import CRAFT
@@ -31,13 +30,14 @@ class TextDetection:
         )
         ratio_h = ratio_w = 1 / target_ratio
 
-        # preprocessing
-        x = normalize_mean_variance(img_resized)
-        x = torch.from_numpy(x).permute(2, 0, 1)  # hwc to chw
-        x = Variable(x.unsqueeze(0))              # chw to bchw
-
-        # forward pass
         with torch.no_grad():
+            # preprocessing
+            x = normalize_mean_variance(img_resized)
+            x = torch.from_numpy(x)
+            x = x.permute(2, 0, 1)  # hwc to chw
+            x = x.unsqueeze(0)      # chw to bchw
+
+            # forward pass
             y, _ = self.model(x)
 
         # make score and link map
