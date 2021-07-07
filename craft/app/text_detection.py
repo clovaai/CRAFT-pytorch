@@ -69,5 +69,5 @@ if __name__ == "__main__":
 
     img = cv2.imread(
         '/home/guilherme/Documents/Code/Nuveo/CRAFT-pytorch/craft/images/test.png')
-    anns = model.get(img)
+    anns = model.predict(img)
     print(anns)

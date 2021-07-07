@@ -141,10 +141,12 @@ def sort_detections(polys):
 
         polys = [p for j, p in enumerate(polys) if j not in remove_indices]
         # sort left-right
-        lines_of_polys[-1] = (np.mean(y_arr), [p[1]
-                                               for p in sorted(lines_of_polys[-1])])
+        lines_of_polys[-1] = (np.mean(y_arr), [
+            p[1] for p in sorted(lines_of_polys[-1], key=lambda x: x[0])]
+        )
+
     # sort top-down
-    lines_of_polys = [p[1] for p in sorted(lines_of_polys)]
+    lines_of_polys = [p[1] for p in sorted(lines_of_polys, key=lambda x: x[0])]
 
     polys = sum(lines_of_polys, [])
     return polys
