@@ -165,7 +165,7 @@ def getPoly_core(boxes, labels, mapper, linkmap):
             polys.append(None); continue
 
         # calc median maximum of pivot points
-        half_char_h = np.median(seg_height) * expand_ratio / 2
+        half_char_h = max_len / 2  # np.median(seg_height) * expand_ratio / 2
 
         # calc gradiant and apply to make horizontal pivots
         new_pp = []
@@ -176,7 +176,7 @@ def getPoly_core(boxes, labels, mapper, linkmap):
                 new_pp.append([x, cy - half_char_h, x, cy + half_char_h])
                 continue
             rad = - math.atan2(dy, dx)
-            c, s = half_char_h * math.cos(rad), half_char_h * math.sin(rad)
+            c, s = abs(half_char_h * math.cos(rad)), half_char_h * math.sin(rad)
             new_pp.append([x - s, cy - c, x + s, cy + c])
 
         # get edge points to cover character heatmaps
