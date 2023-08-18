@@ -73,8 +73,9 @@ def getDetBoxes_core(textmap, linkmap, text_threshold, link_threshold, low_text)
         box = np.roll(box, 4-startidx, 0)
         box = np.array(box)
 
-        det.append(box)
-        mapper.append(k)
+        if np.count_nonzero(box) != 0:
+            det.append(box)
+            mapper.append(k)
 
     return det, labels, mapper
 
