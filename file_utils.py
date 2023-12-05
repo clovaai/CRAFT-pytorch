@@ -30,7 +30,7 @@ def list_files(in_path):
     # gt_files.sort()
     return img_files, mask_files, gt_files
 
-def saveResult(img_file, img, boxes, dirname='./result/', verticals=None, texts=None):
+def saveResult(img_file, img, boxes, dirname='./result/', split=None, draw_bbox=False, verticals=None, texts=None):
         """ save text detection result one by one
         Args:
             img_file (str): image file name
@@ -46,8 +46,12 @@ def saveResult(img_file, img, boxes, dirname='./result/', verticals=None, texts=
         filename, file_ext = os.path.splitext(os.path.basename(img_file))
 
         # result directory
-        res_file = dirname + "res_" + filename + '.txt'
-        res_img_file = dirname + "res_" + filename + '.jpg'
+        if split is not None:
+            res_file = f"{dirname}res_{split}_{filename}.txt"
+            res_img_file = f"{dirname}res_{split}_{filename}.jpg"
+        else:
+            res_file = f"{dirname}res_{filename}.txt"
+            res_img_file = f"{dirname}res_{filename}.jpg"
 
         if not os.path.isdir(dirname):
             os.mkdir(dirname)
@@ -58,9 +62,10 @@ def saveResult(img_file, img, boxes, dirname='./result/', verticals=None, texts=
                 strResult = ','.join([str(p) for p in poly]) + '\r\n'
                 f.write(strResult)
 
-                poly = poly.reshape(-1, 2)
-                cv2.polylines(img, [poly.reshape((-1, 1, 2))], True, color=(0, 0, 255), thickness=2)
-                ptColor = (0, 255, 255)
+                if draw_bbox:
+                    poly = poly.reshape(-1, 2)
+                    cv2.polylines(img, [poly.reshape((-1, 1, 2))], True, color=(0, 0, 255), thickness=2)
+                    ptColor = (0, 255, 255)
                 if verticals is not None:
                     if verticals[i]:
                         ptColor = (255, 0, 0)
