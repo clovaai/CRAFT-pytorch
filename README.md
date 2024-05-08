@@ -47,7 +47,7 @@ LinkRefiner | CTW1500 | - | Used with the General Model | [Click](https://drive.
 python test.py --trained_model=[weightfile] --test_folder=[folder path to test images]
 ```
 
-The result image and socre maps will be saved to `./result` by default.
+The result image and score maps will be saved to `./result` by default.
 
 ### Arguments
 * `--trained_model`: pretrained model
