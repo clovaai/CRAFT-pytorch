@@ -84,6 +84,9 @@ def test_net(net, image, text_threshold, link_threshold, low_text, cuda, poly, r
     with torch.no_grad():
         y, feature = net(x)
 
+    # remove X from device memory, no longer needed
+    del x
+    
     # make score and link map
     score_text = y[0,:,:,0].cpu().data.numpy()
     score_link = y[0,:,:,1].cpu().data.numpy()
@@ -94,6 +97,13 @@ def test_net(net, image, text_threshold, link_threshold, low_text, cuda, poly, r
             y_refiner = refine_net(y, feature)
         score_link = y_refiner[0,:,:,0].cpu().data.numpy()
 
+
+    # remove y and feature from device, whether GPU or CPU
+    del y, feature
+    # empty cuda cache to allow nvidia-smi to be more accurate
+    if cuda:
+        torch.cuda.empty_cache()
+    
     t0 = time.time() - t0
     t1 = time.time()
 
