@@ -4,7 +4,9 @@ import torch
 import torch.nn as nn
 import torch.nn.init as init
 from torchvision import models
-from torchvision.models.vgg import model_urls
+from torchvision.models import VGG16_Weights
+
+model_urls = VGG16_Weights.IMAGENET1K_V1.url
 
 def init_weights(modules):
     for m in modules:
