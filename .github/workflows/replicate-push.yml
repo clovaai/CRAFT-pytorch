@@ -1,9 +1,9 @@
-name: Cog Safe Push
+name: Push to Replicate
 
 on:
   workflow_dispatch:
     inputs:
-      model:
+      model_name:
         description: "owner/model-name (Replicate)"
         required: true
         type: string
@@ -11,35 +11,13 @@ on:
 jobs:
   push:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
     steps:
       - uses: actions/checkout@v4
 
-      - uses: docker/setup-buildx-action@v3
+      - name: Setup Cog
+        uses: replicate/setup-cog@v2
+        with:
+          token: ${{ secrets.REPLICATE_API_TOKEN }}
 
-      # Install Cog (CLI)
-      - name: Install Cog
-        run: |
-          sudo curl -o /usr/local/bin/cog -L https://github.com/replicate/cog/releases/latest/download/cog_`uname -s`_`uname -m`
-          sudo chmod +x /usr/local/bin/cog
-          cog --version
-
-      # Authenticate Cog (required to push)
-      - name: Cog login
-        run: |
-          echo "${{ secrets.REPLICATE_CLI_AUTH_TOKEN }}" | cog login --token-stdin
-
-      # (Optional) Verify weights exist
-      - name: List weights
-        run: ls -lah weights || true
-
-      # Push safely to Replicate (runs a quick test on CPU)
-      - name: Cog Safe Push
-        env:
-          REPLICATE_API_TOKEN: ${{ secrets.REPLICATE_API_TOKEN }}
-        run: |
-          pip install --upgrade pip
-          pip install "git+https://github.com/replicate/cog-safe-push.git"
-          # If you don't set ANTHROPIC_API_KEY, add --no-compare-outputs
-          cog-safe-push --test-hardware=cpu --no-compare-outputs "${{ inputs.model }}"
+      - name: Push
+        run: cog push r8.im/${{ inputs.model_name }}
