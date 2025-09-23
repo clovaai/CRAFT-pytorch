@@ -1,0 +1,38 @@
+name: Cog Safe Push
+
+on:
+  workflow_dispatch:
+    inputs:
+      model:
+        description: "owner/model-name (Replicate)"
+        required: true
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      # Install Docker Buildx (recommended for Cog builds)
+      - uses: docker/setup-buildx-action@v3
+
+      # Install Cog (CLI)
+      - name: Install Cog
+        run: |
+          curl -o /usr/local/bin/cog -L https://github.com/replicate/cog/releases/latest/download/cog_`uname -s`_`uname -m`
+          chmod +x /usr/local/bin/cog
+          cog --version
+
+      # (Optional) Verify weights exist
+      - name: List weights
+        run: ls -lah weights || true
+
+      # Push safely to Replicate (CPU test by default; for GPU, see note below)
+      - name: Cog Safe Push
+        env:
+          REPLICATE_API_TOKEN: ${{ secrets.REPLICATE_API_TOKEN }}
+        run: |
+          pip install cog-safe-push
+          cog-safe-push --test-hardware=cpu ${{ github.event.inputs.model }}
