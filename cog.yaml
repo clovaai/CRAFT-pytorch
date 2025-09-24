@@ -1,0 +1,16 @@
+build:
+  python_version: "3.10"
+  system_packages:
+    - "libgl1"
+    - "libglib2.0-0"
+  python_packages:
+    - torch==2.0.1
+    - torchvision==0.15.2
+    - opencv-python
+    - matplotlib
+    - scikit-image
+    - scipy
+    - Pillow
+    - numpy
+
+predict: "predict.py:Predictor"

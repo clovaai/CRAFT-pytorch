@@ -1,0 +1,23 @@
+name: Push to Replicate
+
+on:
+  workflow_dispatch:
+    inputs:
+      model_name:
+        description: "owner/model-name (Replicate)"
+        required: true
+        type: string
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Cog
+        uses: replicate/setup-cog@v2
+        with:
+          token: ${{ secrets.REPLICATE_API_TOKEN }}
+
+      - name: Push
+        run: cog push r8.im/${{ inputs.model_name }}
